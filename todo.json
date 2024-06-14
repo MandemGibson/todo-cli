@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "task": "Complete the VB assignment",
+    "done": false
+  },
+  {
+    "task": "Continue with the 5gs project",
+    "done": false
+  },
+  {
+    "task": "Continue learning backend",
+    "done": false
+  },
+  {
+    "task": "Learn Django",
+    "done": false
+  }
+]

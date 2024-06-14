@@ -1,6 +1,15 @@
 const { program } = require("commander");
 const fs = require("fs");
 const path = require("path");
+const {
+  addTodo,
+  client,
+  fetchTodos,
+  markTaskAsDone,
+  removeTodo,
+  clearTodos,
+  markTaskANotsDone,
+} = require("./db");
 
 const filePath = path.join(__dirname, "todo.json");
 
@@ -22,63 +31,54 @@ program
   .command("add <tasks>")
   .description("Add new task")
   .action((task) => {
-    const todos = readToDos();
-
-    todos.push({ task, done: false });
-    writeToDos(todos);
-    console.log(`Added task: "${task}"`);
+    addTodo(task);
   });
 
 program
   .command("list")
   .description("List all todos")
   .action(() => {
-    const todos = readToDos();
-    if (todos.length === 0) {
-      console.log("No tasks found");
-      return;
-    }
-    todos.forEach((todo, index) =>
-      console.log(`${index + 1}. [${todo.done ? "x" : ""}] ${todo.task}`)
-    );
+    fetchTodos();
   });
 
 program
   .command("done <index>")
   .description("Mark a task as done")
   .action((index) => {
-    const todos = readToDos();
+    const todos = markTaskAsDone(index);
     if (index > todos.length || index < 1) {
       console.log("Invalid task number");
       return;
     }
-    todos[index - 1].done = true;
-    writeToDos(todos);
-    console.log(`Task ${index} marked as done`);
+  });
+
+program
+  .command("undone <index>")
+  .description("Mark a task as not done")
+  .action((index) => {
+    const todos = markTaskANotsDone(index);
+    if (index > todos.length || index < 1) {
+      console.log("Invalid task number");
+      return;
+    }
   });
 
 program
   .command("remove <index>")
   .description("Remove task")
   .action((index) => {
-    const todos = readToDos();
+    const todos = removeTodo(index);
     if (index > todos.length || index < 1) {
       console.log("Invalid task number");
       return;
     }
-    todos.splice(index - 1, 1);
-    writeToDos(todos);
-    console.log(`Task ${index} has been removed`);
   });
 
 program
   .command("clear")
   .description("Remove all tasks")
   .action(() => {
-    const todos = readToDos();
-    todos.length = 0;
-    writeToDos(todos);
-    console.log("All tasks have been removed");
+    clearTodos();
   });
 
 program.parse(process.argv);
