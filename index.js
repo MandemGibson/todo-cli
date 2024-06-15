@@ -28,33 +28,21 @@ program
   .command("done <index>")
   .description("Mark a task as done")
   .action((index) => {
-    const todos = markTaskAsDone(index);
-    if (index > todos.length || index < 1) {
-      console.log("Invalid task number");
-      return;
-    }
+    markTaskAsDone(index);
   });
 
 program
   .command("undone <index>")
   .description("Mark a task as not done")
   .action((index) => {
-    const todos = markTaskANotsDone(index);
-    if (index > todos.length || index < 1) {
-      console.log("Invalid task number");
-      return;
-    }
+    markTaskANotsDone(index);
   });
 
 program
   .command("remove <index>")
   .description("Remove task")
   .action((index) => {
-    const todos = removeTodo(index);
-    if (index > todos.length || index < 1) {
-      console.log("Invalid task number");
-      return;
-    }
+    removeTodo(index);
   });
 
 program

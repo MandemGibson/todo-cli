@@ -64,7 +64,12 @@ async function markTaskAsDone(id) {
       "UPDATE todo SET done = true, updatedAt = CURRENT_TIMESTAMP WHERE id = $1 RETURNING *",
       [id]
     );
-    console.log(`Marked "${res.rows[0].task}" as done`);
+
+    res.rows.length === 0
+      ? console.log(
+          `No task with id ${id} found.\nRun list to know the available tasks`
+        )
+      : console.log(`Marked "${res.rows[0].task}" as done`);
   } catch (error) {
     console.error("Error marking task as done: ", error.stack);
   } finally {
@@ -79,7 +84,11 @@ async function markTaskANotsDone(id) {
       [id]
     );
 
-    console.log(`Marked "${res.rows[0].task}" as not done`);
+    res.rows.length === 0
+      ? console.log(
+          `No task with id ${id} found.\nRun list to know the available tasks`
+        )
+      : console.log(`Marked "${res.rows[0].task}" as not done`);
   } catch (error) {
     console.error("Error marking task as done: ", error.stack);
   } finally {
@@ -92,7 +101,12 @@ async function removeTodo(id) {
     res = await client.query("DELETE FROM todo WHERE id = $1 RETURNING *", [
       id,
     ]);
-    console.log(`Deleted task "${res.rows[0].task}"`);
+
+    res.rows.length === 0
+      ? console.log(
+          `No task with id ${id} found.\nRun list to know the available tasks`
+        )
+      : console.log(`Deleted task "${res.rows[0].task}"`);
   } catch (error) {
     console.error("Error deleting task: ", error.stack);
   } finally {
