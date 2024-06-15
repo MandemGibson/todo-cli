@@ -1,4 +1,4 @@
-require("dotenv").config()
+require("dotenv").config();
 const { Client } = require("pg");
 
 const client = new Client({
@@ -6,7 +6,7 @@ const client = new Client({
   host: process.env.DB_HOST,
   database: process.env.DB_NAME,
   password: process.env.DB_PASSWORD,
-  port: Number(process.env.DB_USER),
+  port: Number(process.env.PORT),
 });
 
 client
@@ -15,10 +15,12 @@ client
   .catch((err) => console.error("Error connecting to database: ", err.stack));
 
 async function closeConnection() {
-  client
-    .end()
-    .then(() => console.log("Connection ended"))
-    .catch((err) => console.error("Error closing connection: ", err.stack));
+  try {
+    client.end();
+    console.log("Connection ended");
+  } catch (error) {
+    console.error("Error closing connection: ", err.stack);
+  }
 }
 
 async function fetchTodos() {
@@ -27,14 +29,18 @@ async function fetchTodos() {
     if (res.rowCount === 0) {
       console.log("No tasks found");
       return;
-    } else {
-      res.rows.forEach((row) =>
-        console.log(`${row.id}. ${row.task} [${row.done ? "x" : ""}]`)
-      );
     }
+
+    const taskArray = res.rows.map(
+      (row) => `${row.id}. ${row.task} [${row.done ? "x" : ""}]`
+    );
+
+    taskArray.forEach((task) => {
+      console.log(task);
+    });
   } catch (error) {
     console.error("Error fetching todos: ", error.stack);
-  } finally{
+  } finally {
     closeConnection();
   }
 }
@@ -47,7 +53,7 @@ async function addTodo(values) {
     console.log(`Added new task: "${res.rows[0].task}"`);
   } catch (error) {
     console.error(error);
-  } finally{
+  } finally {
     closeConnection();
   }
 }
@@ -55,14 +61,13 @@ async function addTodo(values) {
 async function markTaskAsDone(id) {
   try {
     res = await client.query(
-      "UPDATE todo SET done = true WHERE id = $1 RETURNING *",
+      "UPDATE todo SET done = true, updatedAt = CURRENT_TIMESTAMP WHERE id = $1 RETURNING *",
       [id]
     );
-    await client.query("UPDATE todo SET updatedAt = CURRENT_TIMESTAMP WHERE id = $1 RETURNING *", [id])
     console.log(`Marked "${res.rows[0].task}" as done`);
   } catch (error) {
     console.error("Error marking task as done: ", error.stack);
-  } finally{
+  } finally {
     closeConnection();
   }
 }
@@ -70,14 +75,14 @@ async function markTaskAsDone(id) {
 async function markTaskANotsDone(id) {
   try {
     res = await client.query(
-      "UPDATE todo SET done = false WHERE id = $1 RETURNING *",
+      "UPDATE todo SET done = false, updatedAt = CURRENT_TIMESTAMP WHERE id = $1 RETURNING *",
       [id]
     );
-    await client.query("UPDATE todo SET updatedAt = CURRENT_TIMESTAMP WHERE id = $1 RETURNING *", [id])
+
     console.log(`Marked "${res.rows[0].task}" as not done`);
   } catch (error) {
     console.error("Error marking task as done: ", error.stack);
-  } finally{
+  } finally {
     closeConnection();
   }
 }
@@ -90,7 +95,7 @@ async function removeTodo(id) {
     console.log(`Deleted task "${res.rows[0].task}"`);
   } catch (error) {
     console.error("Error deleting task: ", error.stack);
-  } finally{
+  } finally {
     closeConnection();
   }
 }
@@ -98,11 +103,11 @@ async function removeTodo(id) {
 async function clearTodos() {
   try {
     await client.query("DELETE FROM todo");
-    await client.query("ALTER SEQUENCE todo_id_seq RESTART WITH 1")
+    await client.query("ALTER SEQUENCE todo_id_seq RESTART WITH 1");
     console.log("Cleared all tasks");
   } catch (error) {
     console.error("Error clearing todos: ", error.stack);
-  } finally{
+  } finally {
     closeConnection();
   }
 }

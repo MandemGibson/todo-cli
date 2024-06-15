@@ -1,5 +1,4 @@
 const { program } = require("commander");
-const fs = require("fs");
 const path = require("path");
 const {
   addTodo,
@@ -10,22 +9,6 @@ const {
   clearTodos,
   markTaskANotsDone,
 } = require("./db");
-
-const filePath = path.join(__dirname, "todo.json");
-
-const readToDos = () => {
-  if (!fs.existsSync(filePath)) {
-    return [];
-  }
-
-  const data = fs.readFileSync(filePath);
-
-  return JSON.parse(data);
-};
-
-const writeToDos = (todos) => {
-  fs.writeFileSync(filePath, JSON.stringify(todos, null, 2));
-};
 
 program
   .command("add <tasks>")
