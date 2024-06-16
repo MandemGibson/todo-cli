@@ -1,0 +1,23 @@
+GET http://localhost:8005/api/v1/todos/
+
+###
+POST http://localhost:8005/api/v1/todos/
+Content-Type: application/json
+
+{
+    "task": "Continue being cool"
+}
+
+###
+PUT http://localhost:8005/api/v1/todos/task/1
+Content-Type: application/json
+
+{
+    "task": "Continue being wicked"
+} 
+
+###
+PUT http://localhost:8005/api/v1/todos/7
+
+###
+DELETE http://localhost:8005/api/v1/todos/
