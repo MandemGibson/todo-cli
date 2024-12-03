@@ -5,7 +5,7 @@ POST http://localhost:8005/api/v1/todos/
 Content-Type: application/json
 
 {
-    "task": "Continue being cool"
+    "task": "Learn AI"
 }
 
 ###
@@ -21,3 +21,12 @@ PUT http://localhost:8005/api/v1/todos/7
 
 ###
 DELETE http://localhost:8005/api/v1/todos/
+
+###
+POST http://localhost:8005/api/v1/login
+Content-Type: application/json
+
+{
+    "username": "Mandem Gibson",
+    "email": "themaingib@gmail.com"
+}

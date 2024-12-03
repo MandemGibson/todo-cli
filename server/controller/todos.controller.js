@@ -40,7 +40,10 @@ async function addTask(req, res) {
 
     res
       .status(200)
-      .json({ message: `'${result.rows[0].task}' has been added` });
+      .json({
+        success: true,
+        message: `'${result.rows[0].task}' has been added`,
+      });
   } catch (error) {
     res.status(500).json({ error: "An error occured while creating task" });
   }
@@ -51,10 +54,7 @@ async function editTaskById(req, res) {
     const { id } = req.params;
     const { task } = req.body;
 
-    const result = await client.query(
-      updateTaskById,
-      [task, id]
-    );
+    const result = await client.query(updateTaskById, [task, id]);
 
     res.status(200).json(result.rows);
   } catch (error) {
