@@ -11,18 +11,14 @@ const {
 } = require("../controller/todos.controller");
 const todoRouter = Router();
 
-todoRouter
-.route('/')
-.get(fetchTodos)
-.post(addTask)
-.delete(clearTodos);
+todoRouter.route("/").get(fetchTodos).post(addTask).delete(clearTodos);
 
 todoRouter
-.route('/:id')
-.get(getTaskById);
-.put(markTaskAsDone);
-.patch(markTaskAsNotDone);
-.delete(removeTodo);
+  .route("/:id")
+  .get(getTaskById)
+  .put(markTaskAsDone)
+  .patch(markTaskAsNotDone)
+  .delete(removeTodo);
 
 todoRouter.put("/task/:id", editTaskById);
 
